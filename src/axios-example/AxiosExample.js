@@ -13,20 +13,20 @@ const AxiosExample = () => {
     const [person, setPerson] = useState({id: 0, email: '', firstName: '',lastName: '', title: ''});
 
     //FIND ALL
-    const sendGetRequest = async () => {
+    const sendGetRequest =  async () => {
         console.log("start sendGetRequest");
-        await axios.get(baseURL).then (res => {
-            console.log("Data: " + res.data);
-            console.log("Status: " + res.status);
+        await axios.get(baseURL).then((res) => {
+            console.log("Data: " , res);
+            console.log("Status: " , res.status);
             if(res.status === 200){
                 setPersons(res.data);
                 setMessage("Operation successfully completed");
             } else {
-                setMessage("API ERROR: " + res.status);
+                setMessage("API ERROR: " , res.status);
             }
             setError();
         }).catch(err => {
-            console.log("ERROR: " + err);
+            console.log("ERROR: ", err);
             if(err.message){
                 setError(err.message);
             } else {
@@ -48,18 +48,18 @@ const AxiosExample = () => {
         } 
         if (validation) {
             await axios.get(`${baseURL}${id}`).then(res => {
-                console.log("RESPONSE" + res);
+                console.log("RESPONSE", res);
                 if(res.status === 200){
                     setPersons(res.data);
                     setMessage("Operation successfully completed");
                 }else {
-                    setMessage("API ERROR: " + res.status);
+                    setMessage("API ERROR: ", res.status);
                 }
                 setError();
             }).catch(err => {
-                console.log("ERROR: " + err);
+                console.log("ERROR: ", err);
                 if(err.response){
-                    console.log("ERROR RESPONSE: " + err.response);
+                    console.log("ERROR RESPONSE: ", err.response);
                     setError(err.response.data.statusText);
                 } else {
                     setError(err.message);
@@ -74,18 +74,18 @@ const AxiosExample = () => {
         const data = {email: person.email, firstName: person.firstName, lastName: person.lastName, title: person.title};
         console.log("start sendPostRequest");
         await axios.post(baseURL, data).then(res => {
-            console.log("RESPONSE" + res);
+            console.log("RESPONSE", res);
             if(res.status === 201){
                 setPersons(res.data);
                 setMessage("Operation successfully completed");
             } else {
-                setMessage("API ERROR: " + res.status);
+                setMessage("API ERROR: ", res.status);
             }
             setError();
         }).catch(err => {
-            console.log("ERROR: " + err);
+            console.log("ERROR: ", err);
             if(err.response){
-                console.log("ERROR RESPONSE: " + err.response);
+                console.log("ERROR RESPONSE: ", err.response);
                 setError(err.response.data.statusText);
             } else {
                 setError(err.message);
@@ -98,21 +98,22 @@ const AxiosExample = () => {
 
 const sendPutRequest = async () => {
 
-    const data = {email: person.email, firstName: person.firstName, lastName: person.lastName, title: person.title};
+    const data = {id: person.id, email: person.email, firstName: person.firstName, lastName: person.lastName, title: person.title};
+    console.log(data);
 
 await axios.put(baseURL, data).then(res => {
-    console.log("RESPONSE" + res);
+    console.log("RESPONSE", res);
     if(res.status === 204){
         setPersons(res.data);
         setMessage("Operation successfully completed");
     }else {
-        setMessage("API ERROR: " + res.status);
+        setMessage("API ERROR: ", res.status);
     }
     setError();
 }).catch(err => {
-    console.log("ERROR: " + err);
+    console.log("ERROR: ", err);
     if(err.response){
-        console.log("ERROR RESPONSE: " + err.response);
+        console.log("ERROR RESPONSE: ", err.response);
         setError(err.response.data.statusText);
     } else {
         setError(err.message);
@@ -165,7 +166,7 @@ await axios.put(baseURL, data).then(res => {
               <div className="col m-2">
                 <button type="button" className="btn btn-warning" onClick={sendPutRequest}>Update Data</button>
                 <div className="col-3 m-2">
-                <input type="text" className="form-control" placeholder="Enter Id Number" onChange={(e)=>setId(e.target.value)}/>
+                <input type="text" className="form-control" placeholder="Enter Id Number" onChange={(e)=>person.id = e.target.value}/>
                 <input type="text" className="form-control" placeholder="Enter E-mail Address" onChange={(e)=>person.email = e.target.value}/>
                 <input type="text" className="form-control" placeholder="Enter First Name" onChange={(e)=>person.firstName = e.target.value}/>
                 <input type="text" className="form-control" placeholder="Enter Last Name" onChange={(e)=>person.lastName = e.target.value}/>

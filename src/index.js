@@ -7,4 +7,4 @@ import RouterExample from './router-example/RouterExample';
 
 
 
-ReactDom.render(<RouterExample/>, document.getElementById("main"));
+ReactDom.render(<AxiosExample/>, document.getElementById("main"));

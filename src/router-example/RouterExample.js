@@ -7,7 +7,7 @@ const RouterExample = () => {
     return (
         <div className="container">
             <Router>
-            <Header/>
+                <Header/>
                 <Switch>
                     <Route exact path="/" component={Welcome}/>
                     <Route path="/welcome" component={Welcome}/>
@@ -16,13 +16,35 @@ const RouterExample = () => {
                     <Redirect from="/contactUs" to="about"/>
 
                     <Route path="/about" component={About}/>
-                    <Redirect from="/personInformation/:id" to="data"/>
+                    <Redirect from="/personInformation/:id" to="data/:id"/>
                     <Route path="/data/:id" component={ShowData}/>
+                    <Route path="/error" component={ErrorPage}/>
                     <Route component={NotFound}/>
                 </Switch>
             </Router>
         </div>
     );
+};
+
+const Header = () => {
+    return(
+        <Fragment>
+           <ul className="nav nav-pills nav-fill bg-dark text-white">
+               <li className="nav-item">
+                <Link className="nav-link text-white" to="/home">Home</Link>
+               </li>
+               <li className="nav-item">
+               <Link className="nav-link text-white" to="/welcome">Welcome</Link>
+                </li>
+                <li className="nav-item">
+                <Link className="nav-link text-white" to="/about">About Us</Link>
+                </li>
+                <li className="nav-item">
+                <Link className="nav-link text-white" to="/form">Register</Link>
+                </li>
+           </ul>
+        </Fragment>
+    )
 };
 
 
@@ -47,26 +69,7 @@ const Welcome = () => {
     )
 };
 
-const Header = () => {
-    return(
-        <Fragment>
-           <ul className="nav nav-pills nav-fill bg-dark text-white">
-               <li className="nav-item">
-                <Link className="nav-link text-white" to="/home">Home</Link>
-               </li>
-               <li className="nav-item">
-               <Link className="nav-link text-white" to="/welcome">Welcome</Link>
-                </li>
-                <li className="nav-item">
-                <Link className="nav-link text-white" to="/about">About Us</Link>
-                </li>
-                <li className="nav-item">
-                <Link className="nav-link text-white" to="/form">Register</Link>
-                </li>
-           </ul>
-        </Fragment>
-    )
-};
+
 
 const About = () => {
     return(
@@ -90,8 +93,8 @@ const RegisterForm = () => {
     const history = useHistory();
 
     const redirectToData = () => {
-        const data = {id: id, name: 'Test'};
-        history.push('/data/' + id, data);
+        //const data = {id: id, name: 'Test'};
+        history.push('/data/' + id);
 
     };
 
@@ -99,7 +102,7 @@ const RegisterForm = () => {
         <Fragment>
             <div className="row">
                 <div className="col-6">
-                    <input type="text" name="id" className="form-control" onChange={(e) => setId(e.target.value)} placeholder="Enter Number"/>
+                    <input type="text" name="id" className="form-control" onChange={(e) => setId(e.target.value)} placeholder="Enter ID"/>
                 </div>
                 <div className="col-6">
                     <button type="button" className="btn btn-info" onClick={redirectToData}>Submit</button>
@@ -111,19 +114,35 @@ const RegisterForm = () => {
 
 const ShowData = () => {
     let params = useParams();
-    const location = useLocation();
+    //const location = useLocation();
    const [id, setId] = useState();
-   const [person, setPerson] = useState({id: id, name: ''});
+   const [person, setPerson] = useState({id: 0, name: ''});
 
    useEffect(()=>{
        setId(params.id);
-       console.log(location.state);
-       setPerson({id: location.state.id, name: location.state.name});
-   });
+       //console.log(location.state);
+       //setPerson({id: location.state.id, name: location.state.name});
+   }, []);
+
+   if(id == 0){
+       return <Redirect to={
+           {
+           pathname: "/error",
+           state: {message: "Param is not valid!"}
+       }
+    } />
+   }
     return (
         <Fragment>
-        <b>Id number is: {id} - {person.name}</b>
+        <b>Id number is: {id}</b>
         </Fragment>
+    );
+};
+
+const ErrorPage = () => {
+    const location = useLocation();
+    return (
+        <b>Error: {location.state.message}</b>
     );
 };
 
